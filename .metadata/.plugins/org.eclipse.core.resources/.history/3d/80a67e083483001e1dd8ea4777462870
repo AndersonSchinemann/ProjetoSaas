@@ -1,0 +1,17 @@
+package com.topdata.repository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.topdata.model.Profile;
+import com.topdata.model.Usuario;
+
+@Repository
+public interface ProfileRepository extends JpaRepository<Profile, Long> {
+    // métodos do repositório
+	@Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.profile")
+    List<Usuario> findAllWithProfile();
+}

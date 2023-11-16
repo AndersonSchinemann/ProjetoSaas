@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="app.js"></script>
+    <style>
+        /* Estilos CSS para a página de perfil */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+        }
+
+        .profile-card {
+            width: 400px;
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-card h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .profile-card p {
+            margin-bottom: 10px;
+        }
+
+        .profile-card button {
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body >
+    <div class="container" ng-app="myApp" ng-controller="CadastroController">
+        <div class="profile-card">
+            <div class="form-group row">
+  				<label for="name" class="col-sm-2 col-form-label">Nome:</label>
+				  <div class="col-sm-10">
+				    <input type="text" class="form-control" id="name" [(ngModel)]="user.name" />
+				    <div *ngIf="user">
+				      {{ user.nome }}
+				    </div>
+				  </div>
+			</div>
+
+			<button type="button" class="btn btn-primary" (click)="editProfile()">Editar Perfil</button>
+			<button type="button" class="btn btn-danger" (click)="deleteProfile()">Deletar Perfil</button>
+        </div>
+    </div>
+</body>
+</html>

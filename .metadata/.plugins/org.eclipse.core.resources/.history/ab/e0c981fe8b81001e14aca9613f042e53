@@ -1,0 +1,5 @@
+package com.topdata.model;
+
+public class User {
+
+}

@@ -1,0 +1,22 @@
+var app = angular.module('CadastroApp', []);
+
+app.controller('CadastroController', function($scope, $http) {
+    $scope.usuario = {};
+
+    $scope.cadastrarUsuario = function() {
+        // Aqui você pode enviar os dados para o backend (Spring Boot) usando $http.post
+        // Exemplo:
+       for (var key in $scope.usuario) {
+        if (!$scope.usuario[key]) {
+          // Exibe uma mensagem de erro informando qual campo está vazio
+          alert('O campo ' + key + ' é obrigatório.');
+          return;
+        }
+      }
+      
+	  
+	} 
+         
+});
+
+

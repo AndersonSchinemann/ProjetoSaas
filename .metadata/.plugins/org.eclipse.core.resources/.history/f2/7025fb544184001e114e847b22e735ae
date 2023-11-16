@@ -1,0 +1,52 @@
+package com.topdata.config;
+
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+
+
+@Configuration
+public class WebSecurityConfig {
+	@Bean
+	 SecurityFilterChain configure(HttpSecurity http) throws Exception {
+	  http.authorizeHttpRequests( (authorize) -> authorize
+	         .requestMatchers(HttpMethod.GET,"/js/**").permitAll()
+	         .requestMatchers(HttpMethod.POST,"/js/**").permitAll()
+	         .requestMatchers(HttpMethod.PUT,"/js/**").permitAll()
+	         .requestMatchers("/css/**").permitAll()
+	         .requestMatchers(HttpMethod.GET,"/views/**").permitAll()
+	         .requestMatchers(HttpMethod.POST,"/views/**").permitAll()
+	         .requestMatchers(HttpMethod.PUT,"/views/**").permitAll()
+	         .requestMatchers(HttpMethod.GET,"/api/usuarios/**").permitAll()
+	         .requestMatchers(HttpMethod.POST,"/api/usuarios/**").permitAll()
+	         .requestMatchers(HttpMethod.PUT,"/api/usuarios/**").permitAll()
+	         
+	         .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
+	         .requestMatchers(HttpMethod.POST,"/api/**").permitAll()
+	         .requestMatchers(HttpMethod.PUT,"/api/**").permitAll()
+	         .requestMatchers(HttpMethod.GET,"/cadastro").permitAll()
+	         .requestMatchers(HttpMethod.POST,"/cadastro").permitAll()
+	         .requestMatchers(HttpMethod.PUT,"/cadastro").permitAll()
+	         .requestMatchers(HttpMethod.GET,"/listagem").authenticated()
+	         .requestMatchers(HttpMethod.POST,"/listagem").authenticated()
+	         .requestMatchers(HttpMethod.PUT,"/listagem").authenticated()
+	         .anyRequest().authenticated()
+	   ).formLogin( (form) -> form
+	         .loginPage("/")
+	         .defaultSuccessUrl("/", true)
+	         .failureUrl("/login-error")
+	         .permitAll()
+	    ).logout( (logout) -> logout
+	         .logoutSuccessUrl("/")
+	         //.deleteCookies("JSESSIONID")
+	    ).exceptionHandling( (ex) -> ex
+	         .accessDeniedPage("/negado")
+	    );
+	    return http.build();
+	}
+}

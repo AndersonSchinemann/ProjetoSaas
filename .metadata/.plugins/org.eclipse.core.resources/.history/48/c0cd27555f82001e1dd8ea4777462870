@@ -1,0 +1,65 @@
+<style>
+.container-fluid {
+  background-color: #fff;
+}
+
+.card {
+  border: none;
+  border-radius: 0;
+  margin-bottom: 20px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card-text {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.col-md-2 {
+  background-color: #212529;
+}
+
+.row {
+  margin-top: 20px;
+}
+</style>
+<div class="container-fluid text-left" ng-app="DetalhesApp" ng-controller="DetalhesController">
+  <header class="row bg-primary pt-4 pb-2">
+    <div class="col-12 text-center">
+      <h2>Detalhes do Usuário</h2>
+    </div>
+  </header>
+
+  <div class="row">
+    <div class="col-md-2 bg-primary" style="height: 100%">
+    </div>
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Nome: {{usuario.nome}}</h4>
+          <p class="card-text">
+            Email: {{usuario.email}}
+          </p>
+          <p class="card-text">
+            Perfil: {{usuario.perfil}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <button type="button" class="btn btn-primary mr-2" ng-click="editarUsuario()">Editar</button>
+      <button type="button" class="btn btn-danger" ng-click="deletarUsuario()">Deletar</button>
+    </div>
+  </div>
+</div>

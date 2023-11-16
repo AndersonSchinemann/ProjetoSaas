@@ -1,0 +1,17 @@
+package com.topdata.repository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.topdata.model.Usuario;
+
+
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    // métodos do repositório
+	
+	// Método para buscar usuários por nome e email
+    List<Usuario> findByNomeContainingAndEmailContaining(String nome, String email);
+ 
+}

@@ -1,0 +1,78 @@
+var app = angular.module('CadastroApp',  []);
+
+app.controller('CadastroController', function($scope, $http) {
+    $scope.usuario = {};
+
+    $scope.cadastrarUsuario = function() {
+        // Aqui você pode enviar os dados para o backend (Spring Boot) usando $http.post
+        // Exemplo:
+       for (var key in $scope.usuario) {
+        if (!$scope.usuario[key]) {
+          // Exibe uma mensagem de erro informando qual campo está vazio
+          alert('O campo ' + key + ' é obrigatório.');
+          return;
+        }
+      }
+      $http.post('/api/usuarios', $scope.usuario)
+           .then(function(response) {
+		        console.log(response.data);
+		        // Exibir mensagem de sucesso
+		        alert('Usuário cadastrado com sucesso!');
+		    })
+		    .catch(function(error) {
+		        console.log(error);
+		        // Exibir mensagem de erro
+		        alert('Erro ao cadastrar usuário. Por favor, tente novamente.');
+			});
+	  
+	} 
+         
+});
+
+
+angular.module('myApp', [])
+.controller('ProfileController', function($scope, $http) {
+    $scope.user = {
+        name: '',
+        email: '',
+        age: 0,
+        city: ''
+    };
+
+    $scope.editing = false;
+
+    $scope.getUser = function(userId) {
+        $http.get('/user/' + userId)
+            .then(function(response) {
+                $scope.user = response.data;
+            })
+            .catch(function(error) {
+                console.log('Erro ao obter os dados do usuário:', error);
+            });
+    };
+
+    $scope.updateUser = function(userId) {
+        $http.put('/user/' + userId, $scope.user)
+            .then(function(response) {
+                $scope.user = response.data;
+                $scope.editing = false;
+            })
+            .catch(function(error) {
+                console.log('Erro ao atualizar os dados do usuário:', error);
+            });
+    };
+
+    $scope.editProfile = function() {
+        $scope.editing = true;
+    };
+
+    $scope.cancelEdit = function() {
+        $scope.editing = false;
+        $scope.getUser(userId); // Recarrega os dados originais do usuário
+    };
+
+    // Chamar getUser(userId) para obter os dados do usuário quando a página carregar
+    var userId = '123'; // Substitua pelo ID do usuário desejado
+    $scope.getUser(userId);
+});
+
