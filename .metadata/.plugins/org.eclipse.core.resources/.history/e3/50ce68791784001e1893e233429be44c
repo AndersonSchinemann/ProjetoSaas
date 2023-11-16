@@ -1,0 +1,5 @@
+package com.topdata.config;
+
+public class AuthController {
+
+}

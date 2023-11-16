@@ -1,0 +1,28 @@
+
+
+ var app=angular.module('myLogin', []);
+ 
+ app.controller('LoginController', function($scope, $http) {
+                
+                $scope.login = function() {
+					alert("LOGIN")
+                    var credentials = {
+                        username: $scope.username,
+                        password: $scope.password
+                    };
+
+                    $http.post('/api', credentials)
+                        .then(function(response) {
+                            // Lógica para lidar com a resposta do servidor após a autenticação
+                            console.log(response.data);
+                        })
+                        .catch(function(error) {
+                            // Lógica para lidar com erros de autenticação
+                            console.error(error);
+                        });
+                };
+  
+});
+
+
+         

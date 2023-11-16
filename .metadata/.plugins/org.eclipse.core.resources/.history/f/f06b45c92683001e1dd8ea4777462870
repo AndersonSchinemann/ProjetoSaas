@@ -1,0 +1,60 @@
+<!-- Adicione Bootstrap CSS e AngularJS -->
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+
+<!-- Adicione ng-bootstrap CSS e JavaScript -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/3.0.6/ui-bootstrap-tpls.min.js"></script>-->
+<style>
+  /* Adicione um estilo personalizado para ajustar a largura dos inputs */
+  .custom-width-input {
+    width: 50%; /* Largura desejada */
+     /* Para centralizar horizontalmente */
+  }
+</style>
+<!-- Seus scripts Angular -->
+<script src="js/controllerFiltro.js"></script>
+
+<div class="container text-left" ng-app="ListarApp" ng-controller="UsuarioController">
+
+  <h2>Lista de Usuários</h2>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="nome">Nome:</label>
+      <input type="text" class="form-control custom-width-input" ng-model="searchText" placeholder="Pesquisar por nome ou email">
+    </div>
+    
+  </div>
+
+  <button type="button" class="btn btn-primary" ng-click="search1()">Buscar</button>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Senha</th>
+        <th>Perfil</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat=usuario in usuarios" | filter:filtro">
+        <td>{{ usuario.nome }}</td>
+        <td>{{ usuario.email }}</td>
+        <td>{{ usuario.senha }}</td>
+        <td>{{ usuario.perfil }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li class="page-item" ng-class="{ 'disabled': currentPage === 1 }">
+      <a class="page-link" href="#" ng-click="prevPage()">Anterior</a>
+    </li>
+
+    <li class="page-item" ng-class="{ 'disabled': currentPage === totalPages }">
+      <a class="page-link" href="#" ng-click="nextPage()">Próxima</a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,45 @@
+<style>
+	.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 18px;
+  color: white;
+}
+
+.card-text {
+  font-size: 16px;
+  color: white;
+}
+</style>
+<div class="container text-left" ng-app="DetalhesApp" ng-controller="DetalhesController">
+  <h2>Detalhes do Usuário</h2>
+
+  <div class="card mb-3" style="background-color: #212529">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <img src="https://picsum.photos/400/400" class="rounded-circle" alt="Foto do usuário">
+        </div>
+        <div class="col-md-8">
+          <h4 class="card-title">Nome: {{usuario.nome}}</h4>
+          <p class="card-text">
+            Email: {{usuario.email}}
+          </p>
+          <p class="card-text">
+            Perfil: {{usuario.perfil}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn btn-primary" ng-click="editarUsuario()">Editar</button>
+</div>

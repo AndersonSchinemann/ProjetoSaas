@@ -1,0 +1,26 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJS Pagination and Filter</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="app.js"></script>
+</head>
+<body ng-controller="MainController">
+    <h1>User Data</h1>
+
+    <input type="text" ng-model="searchText" placeholder="Search by email or name">
+    <button ng-click="search()">Search</button>
+
+    <ul>
+        <li ng-repeat="user in paginatedUsers">
+            {{ user.name }} - {{ user.email }} - {{ user.profile }}
+        </li>
+    </ul>
+
+    <button ng-click="prevPage()">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button ng-click="nextPage()">Next</button>
+</body>
+</html>
