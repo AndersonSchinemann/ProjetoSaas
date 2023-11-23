@@ -1,0 +1,12 @@
+package com.topdata.teste;
+
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+public class testeUsuario {
+
+    @Test
+    public void testarAlgumaCoisa() {
+        assertEquals(4, 2 + 2);
+    }
+}

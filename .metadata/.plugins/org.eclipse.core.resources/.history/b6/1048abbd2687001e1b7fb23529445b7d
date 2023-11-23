@@ -1,0 +1,28 @@
+var app=angular.module('myLogin',[]);
+
+
+app.controller('LoginController', function($scope, $http,$window) {
+    $scope.login = {};
+    
+    $scope.acessoLogin = function() {
+	    $http.post('/login/api/acesso', $scope.login)
+            .then(function(response) {
+				console.log(response);
+                alert('Login bem-sucedido!'); 
+                alert(response.data.redirectUrl); 
+                // Verifique se há uma URL de redirecionamento na resposta
+                if (response.data.redirectUrl) {
+                    $window.location.href = response.data.redirectUrl;
+                } else {
+                    // Se não houver uma URL de redirecionamento, vá para a página padrão
+                    $window.location.href = "/listagem";
+                }             
+            })
+            .catch(function(error) {
+                console.log(error);
+                alert('Credenciais inválidas para este usuario.');
+            });
+    };
+});
+
+

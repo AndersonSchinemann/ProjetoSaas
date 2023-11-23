@@ -1,0 +1,6 @@
+Manifest-Version: 2.0
+Build-Jdk-Spec: 19
+Implementation-Title: TopData
+Implementation-Version: 0.0.1-SNAPSHOT
+Created-By: Maven Integration for Eclipse
+

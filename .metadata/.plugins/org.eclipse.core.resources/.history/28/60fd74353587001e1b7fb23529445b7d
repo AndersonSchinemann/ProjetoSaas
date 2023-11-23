@@ -1,0 +1,133 @@
+package com.topdata.service;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import com.topdata.model.Usuario;
+import com.topdata.repository.ProfileRepository;
+import com.topdata.repository.UsuarioRepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class UsuarioService{
+	
+	@Autowired
+	private final UsuarioRepository userRepository;
+	@Autowired
+    private final ProfileRepository profileRepository;
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	
+	public UsuarioService(UsuarioRepository userRepository, ProfileRepository profileRepository,AuthenticationManager authenticationManager) {
+        this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
+        this.authenticationManager = authenticationManager;
+    }
+	@Transactional
+	public boolean validarCredenciais(String username, String password) {
+	    
+		Usuario usuario = userRepository.findByEmail(username);
+
+	    if (usuario != null && password.equals(usuario.getPassword()) && username.equals(usuario.getEmail())) {
+	        // Credenciais válidas
+	    	System.out.println("Password Service " + password );
+	        return true;
+	    } else {
+	        // Credenciais inválidas ou usuário não encontrado
+	        return false;
+	    }
+	    
+	}
+	private boolean validarSenha(String senhaDigitada, String senhaArmazenada) {
+	    return senhaDigitada.equals(senhaArmazenada);
+	}
+
+	
+	public boolean autenticarUsuario(String username, String password) {
+		System.out.println("Name Service " + username);
+		System.out.println("Password Service " + password);
+		
+	    if (validarCredenciais(username, password)) {
+	    	
+	        try {
+	            // Cria um token de autenticação
+	        	
+	        	Authentication authentication = authenticationManager.authenticate(
+			            new UsernamePasswordAuthenticationToken(username, password)
+			  );
+	            // Autentica o token
+	        	
+
+	            // Configura o contexto de segurança
+	            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+	            // Se a autenticação for bem-sucedida, libera a página `/listagem`
+	            ///if (authentication.isAuthenticated()) {
+	                return true;
+	            //}
+	        } catch (AuthenticationException e) {
+	            // Tratar exceção de autenticação
+	            e.printStackTrace();
+	        }
+	     }
+	    return false;
+	}
+    
+    public void save(Usuario usuario) {
+	        profileRepository.save(usuario.getProfile());
+	        userRepository.save(usuario);
+	}
+    public Usuario getUsuario(String userId) {
+    	Long id = Long.parseLong(userId);
+        return userRepository.findById(id).get();	
+    }
+    public List<Usuario> getAllUsuarios() {
+        return userRepository.findAll();
+    }
+
+    public Usuario getUsuarioById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+//    public List<Usuario> searchUsuarios(String searchTerm) {
+//        return userRepository.findByNameContainingAndEmailContaining(searchTerm, searchTerm);
+//    }
+    
+    public void deleteUsuarioAll(Usuario usuario) {
+    	userRepository.delete(usuario);
+    }
+    
+    public boolean deleteUsuario(long id) {
+    	try {
+            userRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            
+           return false;
+        }
+    }
+    
+    public List<Usuario> pesquisaUsuario(String searchText, boolean searchMode){
+    	System.out.println("Procurando usuario Sevice");
+    	return userRepository.findByNameContainingOrEmailContaining(searchText,searchMode);
+    }
+    
+    public Usuario atualizarUsuario(Usuario usuarioAtualizado) {
+        // Verifique se o usuário existe antes de tentar atualizar
+        if (userRepository.existsById(usuarioAtualizado.getId())) {
+            return userRepository.save(usuarioAtualizado);
+        } else {
+            // Lógica de tratamento se o usuário não existir
+            return null;
+        }
+    }
+    
+}

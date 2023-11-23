@@ -1,0 +1,25 @@
+var app=angular.module('myLogin',[]);
+
+
+app.controller('LoginController', function($scope, $http) {
+    $scope.login = {};
+    
+    $scope.acessoLogin = function() {
+	    $http.post('/login/api/acesso', $scope.login)
+            .then(function(response) {
+				console.log(response);
+                alert('Login bem-sucedido!');              
+            })
+            .catch(function(error) {
+                console.log(error);
+                if (error.response.status === 403) {
+                    alert('Acesso negado. Verifique suas credenciais.');
+                } else {
+                    console.log(error.response.status);
+                    alert('Credenciais inválidas para este usuário.');
+                }
+            });
+    };
+});
+
+

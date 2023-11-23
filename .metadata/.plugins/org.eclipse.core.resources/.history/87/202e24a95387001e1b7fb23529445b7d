@@ -1,0 +1,27 @@
+package com.topdata.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.topdata.model.Usuario;
+
+@Service
+public class AuthService {
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    public boolean autenticarUsuario(String username, String password) {
+        Usuario usuario = usuarioService.findByUsername(username);
+        if (usuario == null) {
+            return false; // Usuário não encontrado
+        }
+
+        // Implemente a lógica de validação da senha do usuário
+        if (!usuario.getPassword().equals(password)) {
+            return false; // Senha incorreta
+        }
+
+        return true; // Credenciais válidas
+    }
+}

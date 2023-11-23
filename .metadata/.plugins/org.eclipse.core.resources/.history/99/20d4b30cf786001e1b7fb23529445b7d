@@ -1,0 +1,40 @@
+var xhr = new XMLHttpRequest();
+xhr.open('POST', 'http://localhost:8080/');
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === XMLHttpRequest.DONE) {
+    if (xhr.status === 200) {
+      var response = JSON.parse(xhr.responseText);
+      // Verifique a estrutura e os dados da resposta
+      console.log(response);
+    } else {
+      // Trate erros de solicitação
+      console.error('Erro na solicitação: ' + xhr.status);
+    }
+  }
+};
+xhr.send();
+
+var app=angular.module('myLogin',[]);
+
+app.controller('LoginController', function($scope, $http) {
+  $scope.acessoLogin = function() {
+    var request = {
+      method: 'POST',
+      url: '/api/login',
+      data: {
+        username: $scope.email,
+        password: $scope.senha
+      }
+    };
+
+    $http(request).then(function(response) {
+      console.log('Valor da resposta:', response.data);
+      // Faça algo com a resposta, como exibir uma mensagem de sucesso ou atualizar o estado do aplicativo
+    }).catch(function(error) {
+      console.log('Erro na resposta:', error);
+      // Trate o erro de resposta, como exibir uma mensagem de erro ou reverter as alterações no estado do aplicativo
+    });
+  };
+});
+
+

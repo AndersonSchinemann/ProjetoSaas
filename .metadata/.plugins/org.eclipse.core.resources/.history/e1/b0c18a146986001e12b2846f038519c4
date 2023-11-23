@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- Adicione Bootstrap CSS e AngularJS -->
+<!--
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/3.0.6/ui-bootstrap-tpls.min.js"></script>
+-->
+
+<!-- Adicione ng-bootstrap CSS e JavaScript -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+
+
+<style>
+  /* Adicione um estilo personalizado para ajustar a largura dos inputs */
+  .custom-width-input {
+    width: 30%; /* Largura desejada */
+     /* Para centralizar horizontalmente */
+  }
+</style>
+<title>Tela Login</title>
+<!-- Seus scripts Angular -->
+<script src="js/controllerLogin.js"></script>
+
+<div class="container text-left" ng-app="myLogin" ng-controller="LoginController">
+
+  <!-- Formulário de Login -->
+  <div class="container mt-5">
+    <h2>Login</h2>
+    <form >
+      <div class="form-group">
+        <label for="loginEmail">Email:</label>
+        <input type="email" class="form-control custom-width-input" id="email"  name="email" ng-model="login.email"  placeholder="Digite seu email">
+      </div>
+      <div class="form-group">
+        <label for="loginSenha">Senha:</label>
+        <input type="password" class="form-control custom-width-input" id="senha" name="senha" ng-model="login.senha" placeholder="Digite sua senha">
+      </div>
+      <button type="button" class="btn btn-primary" ng-click="acessoLogin()">Entrar</button>
+    </form>
+    <div class="mt-3">
+      <p>Não tem uma conta? <a href="/cadastro">Cadastre-se</a></p>
+    </div>
+  </div>
+</div>

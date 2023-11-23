@@ -1,0 +1,94 @@
+package com.topdata.config;
+
+
+
+
+
+
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authorization.method.AuthorizationManagerAfterReactiveMethodInterceptor;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.nimbusds.oauth2.sdk.http.HTTPRequest.Method;
+
+
+@Configuration
+@EnableWebSecurity
+public class WebSecurityConfig{
+	
+	@Bean
+	 SecurityFilterChain configure(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable())
+		 .authorizeHttpRequests( (authorize) -> authorize
+			 .requestMatchers("/src/**","/static/**", "/css/**", "/js/**", "/views/**", "/api/usuarios/**").permitAll()
+			 .requestMatchers("/static/**").permitAll()
+			 .requestMatchers("/error").permitAll()
+			 .requestMatchers("/cadastro").permitAll()
+			 .requestMatchers("/login/api/**").permitAll()
+              //.requestMatchers("/").authenticated()
+	         .requestMatchers("/listagem").authenticated()
+	         .anyRequest().authenticated()
+	   ).formLogin( (form) -> form
+	         .loginPage("/").permitAll()
+	         .defaultSuccessUrl("/listagem",true)
+	         .failureUrl("/")
+	         .permitAll()
+	    ).logout( (logout) -> logout
+	         .logoutSuccessUrl("/")
+	         .deleteCookies("JSESSIONID")
+	    ).exceptionHandling( (ex) -> ex
+	         .accessDeniedPage("/negado")
+	    );
+	    return http.build();
+	}
+	
+//	@Bean
+	public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("*")
+                .allowedOrigins("http://localhost:8080/")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowCredentials(true)
+                .maxAge(3600);
+    }
+//	@Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.addAllowedOrigin("*"); // Permitir qualquer origem, ajuste conforme necessário
+//        configuration.addAllowedMethod("*"); // Permitir todos os métodos (GET, POST, PUT, DELETE, etc.)
+//        configuration.addAllowedHeader("*"); // Permitir todos os cabeçalhos
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("*", configuration);
+//
+//        return source;
+//    }
+//	@Bean
+//   CsrfTokenRepository csrfTokenRepository() {
+//        CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+//        // Adicionar outras configurações, se necessário
+//        return repository;
+//    }
+//	@Bean
+//    WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//        	addCorsMappings(CorsRegistry registry)
+//        };
+//    }
+	 @Bean
+	 AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
+        return authConfiguration.getAuthenticationManager();
+	 }
+
+}

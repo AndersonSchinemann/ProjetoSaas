@@ -1,0 +1,27 @@
+
+var app = angular.module('myLogin', []);
+
+app.controller('LoginController', function($scope, $http) {
+  $scope.acessoLogin = function() {
+    var request = {
+      method: 'POST',
+      url: '/api/login',
+      data: {
+        username: $scope.email,
+        password: $scope.senha
+      }
+    };
+
+    $http(request).then(function(response) {
+      console.log('Valor da resposta:', response.data);
+      // Faça algo com a resposta, como exibir uma mensagem de sucesso ou atualizar o estado do aplicativo
+      // Verifique a estrutura e os dados da resposta
+      console.log(response.data);
+    }).catch(function(error) {
+      console.log('Erro na resposta:', error);
+      // Trate o erro de resposta, como exibir uma mensagem de erro ou reverter as alterações no estado do aplicativo
+    });
+  };
+}););
+
+

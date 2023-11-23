@@ -1,0 +1,21 @@
+var app=angular.module('myLogin',[]);
+
+
+app.controller('LoginController', function($scope, $http) {
+    $scope.login = {};
+    
+    $scope.acessoLogin = function() {
+	    $http.post('/login/api/acesso', $scope.login)
+            .$http.post('/api/login/acesso', $scope.login)
+		    .then(function(response) {
+		        console.log('Valor da resposta:', response.data);
+		        // Faça algo com a resposta, como exibir uma mensagem de sucesso ou atualizar o estado do aplicativo
+		    })
+		    .catch(function(error) {
+		        console.log('Erro na resposta:', error.status);
+		        // Trate o erro de resposta, como exibir uma mensagem de erro ou reverter as alterações no estado do aplicativo
+		    });
+    };
+});
+
+

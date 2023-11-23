@@ -1,0 +1,21 @@
+var app=angular.module('myLogin',[]);
+
+
+app.controller('LoginController', function($scope, $http,$window) {
+    $scope.login = {};
+    
+    $scope.acessoLogin = function() {
+	    $http.post('/login/api/acesso', $scope.login)
+            .then(function(response) {
+				console.log(response);
+                alert('Login bem-sucedido!'); 
+                //$window.redirect.href = "/listagem";             
+            })
+            .catch(function(error) {
+                console.log(error);
+                alert('Credenciais inválidas para este usuario.');
+            });
+    };
+});
+
+

@@ -1,0 +1,31 @@
+var app=angular.module('myLogin',[]);
+
+
+app.controller('LoginController', function($scope, $http) {
+    $scope.login = {};
+    
+    $scope.acessoLogin = function() {
+	    $http.post('/login/api/acesso', $scope.login)
+            .then(function(response) {
+				 // Verifica se os dados da resposta HTTP são um objeto JSON válido
+                if (response.data && typeof response.data === 'object') {
+                    // Exibe os dados da resposta HTTP
+                    console.log(response.data);
+                } else {
+                    // Exibe o erro
+                    console.log('Erro: [$http:baddata]');
+                }              
+            })
+            .catch(function(error) {
+                console.log(error);
+                if (error.response.status === 403) {
+                    alert('Acesso negado. Verifique suas credenciais.');
+                } else {
+                    console.log(error.response.status);
+                    alert('Credenciais inválidas para este usuário.');
+                }
+            });
+    };
+});
+
+

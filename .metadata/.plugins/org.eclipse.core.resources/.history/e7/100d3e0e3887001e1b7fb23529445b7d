@@ -1,0 +1,41 @@
+var app=angular.module('myLogin',[]);
+
+
+app.controller('LoginController', function($scope, $http,$window) {
+    $scope.login = {};
+    
+    $scope.acessoLogin = function() {
+	    $http.post('/login/api/acesso', $scope.login)
+            .then(function(response) {
+				console.log(response);
+                alert('Login bem-sucedido!'); 
+               $window.location.href = "/listagem";            
+            })
+            .catch(function(error) {
+                console.log(error);
+                alert('Credenciais inválidas para este usuario.');
+            });
+    };
+});
+
+app.controller('LoginController', function($scope, $http, $window) {
+    $scope.Sair = function() {
+        $http.post('/login/api/logout')  // Endpoint de logout no back-end
+            .then(function(response) {
+                // Limpar dados ou executar ações após o logout bem-sucedido
+                console.log('Logout bem-sucedido:', response.data);
+
+                // Exemplo: Limpar dados do usuário na aplicação
+                $scope.usuario = null;
+
+                // Exemplo: Redirecionar para a página de login
+                $window.location.href = '/login';
+            })
+            .catch(function(error) {
+                console.error('Erro ao fazer logout:', error);
+
+                // Exemplo: Exibir uma mensagem de erro para o usuário
+                alert('Erro ao fazer logout. Tente novamente.');
+            });
+    };
+});
