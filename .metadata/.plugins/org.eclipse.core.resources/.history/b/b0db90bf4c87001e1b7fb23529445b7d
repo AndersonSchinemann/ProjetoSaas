@@ -1,0 +1,36 @@
+package com.topdata.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
+
+@Configuration
+public class SecurityConfig {
+
+    private final DataSource dataSource;
+
+    public SecurityConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        JdbcDaoImpl userDetailsService = new JdbcDaoImpl();
+        userDetailsService.setDataSource(dataSource);
+        userDetailsService.setUsersByUsernameQuery(
+                "SELECT name, password FROM user WHERE name=?");
+        userDetailsService.setAuthoritiesByUsernameQuery(
+                "SELECT name, FROM authorities WHERE name=?");
+        return userDetailsService;
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}

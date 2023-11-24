@@ -1,0 +1,36 @@
+var app = angular.module('CadastroApp',  []);
+
+
+app.controller('UsuarioController', function($scope, $http) {
+    $scope.usuario = {};
+
+    $scope.cadastrarUsuario = function() {
+        $http.post('/api/usuarios/cad', $scope.usuario)
+            .then(function(response) {
+                console.log(response.data);
+                alert('Usuário cadastrado com sucesso!');
+            })
+            .catch(function(error) {
+                console.log(error);
+                alert('Erro ao cadastrar usuário. Por favor, tente novamente.');
+            });
+    }
+    $scope.sair = function() {
+        $http.post('/api/usuarios/logout')  // Endpoint de logout no back-end
+            .then(function(response) {
+                // Limpar dados ou executar ações após o logout bem-sucedido
+                console.log(response);
+				alert('Logout feito com sucesso ');
+				$scope.usuario = null;
+                // Exemplo: Redirecionar para a página de login
+                $window.location.href = '/';
+            })
+            .catch(function(error) {
+                console.error('Erro ao fazer logout:', error);
+                alert('Erro ao fazer logout. Tente novamente.');
+            });
+    };
+});
+
+
+

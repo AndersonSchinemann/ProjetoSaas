@@ -1,0 +1,64 @@
+var app=angular.module('myLogin',[]);
+
+
+app.factory('httpResponseInterceptor', function($q) {
+  return {
+    response: function(response) {
+      console.log('Interceptor response chamado'); // Verifica se a função está sendo chamada corretamente
+      
+      console.log('Valor da resposta:', JSON.stringify(response)); // Imprime o valor da resposta como uma string JSON
+      
+      return response;
+    },
+    responseError: function(rejection) {
+      console.log('Interceptor responseError chamado'); // Verifica se a função está sendo chamada corretamente
+      
+      console.log('Erro na resposta:', rejection); // Imprime o valor do erro no console
+      
+      return $q.reject(rejection);
+    }
+  };
+});
+
+app.config(function($httpProvider) {
+    $httpProvider.interceptors.push('httpResponseInterceptor');
+});
+app.controller('LoginController', function($scope, $http) {
+    $scope.login = {};
+    
+    $scope.login = function() {
+	    $http.post('/login/api/acesso', $scope.login)
+            .then(function(response) {
+				console.log(response);
+                alert('Login bem-sucedido!');              
+            })
+            .catch(function(error) {
+               //console.log(error);
+               alert('Credenciais inválidas para este usuario ##.');
+               console.log('Valor da resposta:', JSON.stringify(response))
+                
+            });
+    };
+});
+app.controller('LoginController', function($scope, $http) {
+  $scope.acessoLogin = function() {
+    var request = {
+      method: 'POST',
+      url: '/api/login',
+      data: {
+        username: $scope.email,
+        password: $scope.senha
+      }
+    };
+
+    $http(request).then(function(response) {
+      console.log('Valor da resposta:', response.data);
+      // Faça algo com a resposta, como exibir uma mensagem de sucesso ou atualizar o estado do aplicativo
+    }).catch(function(error) {
+      console.log('Erro na resposta:', error);
+      // Trate o erro de resposta, como exibir uma mensagem de erro ou reverter as alterações no estado do aplicativo
+    });
+  };
+});
+
+

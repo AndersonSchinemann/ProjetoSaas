@@ -1,0 +1,82 @@
+package com.topdata.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+
+
+
+@Configuration
+@EnableWebSecurity
+public class WebSecurityConfig{
+	
+	
+	@Bean
+	 SecurityFilterChain configure(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable())
+		 .authorizeHttpRequests( (authorize) -> authorize
+			 .requestMatchers("/src/**","/static/**", "/css/**", "/js/**", "/views/**", "/api/usuarios/**").permitAll()
+			 .requestMatchers("/static/**").permitAll()
+			 .requestMatchers("/error").permitAll()
+			 .requestMatchers("/cadastro").permitAll()
+			 .requestMatchers("/login/api/**").permitAll()
+              .requestMatchers("/listagem").permitAll()
+	          //.requestMatchers("/listagem").authenticated()
+	         .anyRequest().permitAll()
+	   ).formLogin( (form) -> form
+	         .loginPage("/").permitAll()
+	         .defaultSuccessUrl("/",true)
+	         .failureUrl("/")
+	         .permitAll()
+	    ).logout( (logout) -> logout
+	         .logoutSuccessUrl("/logout")
+	         .deleteCookies("JSESSIONID")
+	    ).exceptionHandling( (ex) -> ex
+	         .accessDeniedPage("/negado")
+	    );
+	    return http.build();
+	}
+	
+//	@Bean
+	public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("*")
+                .allowedOrigins("http://localhost:8080/")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowCredentials(true)
+                .maxAge(3600);
+    }
+	
+    @Bean
+	 AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
+	        return authConfiguration.getAuthenticationManager();
+	 }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    
+	 @Bean
+	 LogoutFilter logoutFilter() {
+	     LogoutFilter logoutFilter = new LogoutFilter(
+	         "/logout",
+	         new SecurityContextLogoutHandler());
+	     logoutFilter.setFilterProcessesUrl("/logout");
+	     return logoutFilter;
+	 }
+
+}

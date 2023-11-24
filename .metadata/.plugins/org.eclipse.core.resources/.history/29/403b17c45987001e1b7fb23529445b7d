@@ -1,0 +1,65 @@
+package com.topdata.controller;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.topdata.model.Usuario;
+import com.topdata.security.UserDetailsAdapter;
+import com.topdata.service.AuthService;
+import com.topdata.service.UsuarioService;
+
+import ch.qos.logback.core.model.Model;
+import jakarta.transaction.Transactional;
+
+@CrossOrigin(origins = "http://localhost:8080/")
+@RestController
+@RequestMapping("/login/api")
+public class LoginController {
+	
+	 private final AuthService authService;
+
+	 public LoginController( AuthService authService) {
+	     this.authService = authService;
+	 }
+
+	@PostMapping("/acesso")
+	@Transactional
+	public ResponseEntity<String> login(@RequestBody Map<String, Object> loginData) {
+		String username = (String) loginData.get("email");
+		String password = (String) loginData.get("senha");
+
+		if (authService.autenticarUsuario(username, password)) {
+			UserDetailsAdapter userDetails = new UserDetailsAdapter(usuario);
+	    	Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, usuario.getPassword(), userDetails.getAuthorities());
+		    SecurityContextHolder.getContext().setAuthentication(authentication);
+			System.out.println("Senha validada Auth");
+			
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	}
+	
+
+}

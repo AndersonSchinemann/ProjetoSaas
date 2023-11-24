@@ -1,0 +1,40 @@
+var app=angular.module('myLogin',[]);
+
+
+app.factory('httpResponseInterceptor', function($q) {
+    return {
+        response: function(response) {
+            if (response.data && response.data.data) {
+                response.data = response.data.data;
+                alert('data convertida');  
+            }
+            return response;
+        },
+        responseError: function(rejection) {
+            return $q.reject(rejection);
+        }
+    };
+});
+
+app.config(function($httpProvider) {
+    $httpProvider.interceptors.push('httpResponseInterceptor');
+});
+app.controller('LoginController', function($scope, $http) {
+    $scope.login = {};
+    
+    $scope.acessoLogin = function() {
+	    $http.post('/login/api/acesso', $scope.login)
+            .then(function(response) {
+				console.log(response);
+                alert('Login bem-sucedido!');              
+            })
+            .catch(function(error) {
+               //console.log(error);
+               alert('Credenciais inválidas para este usuario ##.');
+               console.log('Valor da resposta:', JSON.stringify(response))
+                
+            });
+    };
+});
+
+

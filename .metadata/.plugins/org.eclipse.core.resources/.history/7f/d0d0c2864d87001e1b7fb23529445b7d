@@ -1,0 +1,134 @@
+package com.topdata.service;
+
+import java.util.List;
+
+import javax.security.auth.login.AccountExpiredException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import com.topdata.model.Usuario;
+import com.topdata.repository.ProfileRepository;
+import com.topdata.repository.UsuarioRepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+
+public class UsuarioService{
+	
+	@Autowired
+	private final UsuarioRepository userRepository;
+	@Autowired
+    private final ProfileRepository profileRepository;
+	private AuthenticationManager authenticationManager;
+	
+
+	public UsuarioService(UsuarioRepository userRepository, ProfileRepository profileRepository,AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
+    }
+
+	public boolean validarCredenciais(String username, String password) {
+        try {
+            // Cria um token de autenticação
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+
+            // Configura o contexto de segurança
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // A autenticação foi bem-sucedida
+            return true;
+        } catch (Exception e) {
+            handleAuthenticationException(e);
+            return false;
+        }
+    }
+
+    private void handleAuthenticationException(Exception exception) {
+        // Trate as exceções de autenticação específicas
+        if (exception instanceof BadCredentialsException) {
+            // Credenciais inválidas
+            exception.printStackTrace();
+        } else if (exception instanceof LockedException) {
+            // Conta bloqueada
+            exception.printStackTrace();
+        } else if (exception instanceof DisabledException) {
+            // Conta desativada
+            exception.printStackTrace();
+        } else if (exception instanceof AccountExpiredException) {
+            // Conta expirada
+            exception.printStackTrace();
+        } else if (exception instanceof CredentialsExpiredException) {
+            // Credenciais expiradas
+            exception.printStackTrace();
+        } else {
+            // Outras exceções de autenticação
+            exception.printStackTrace();
+        }
+   }
+	    
+	
+	
+    
+    public void save(Usuario usuario) {
+	        profileRepository.save(usuario.getProfile());
+	        userRepository.save(usuario);
+	}
+    public Usuario getUsuario(String userId) {
+    	Long id = Long.parseLong(userId);
+        return userRepository.findById(id).get();	
+    }
+    public List<Usuario> getAllUsuarios() {
+        return userRepository.findAll();
+    }
+
+    public Usuario getUsuarioById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+//    public List<Usuario> searchUsuarios(String searchTerm) {
+//        return userRepository.findByNameContainingAndEmailContaining(searchTerm, searchTerm);
+//    }
+    
+    public void deleteUsuarioAll(Usuario usuario) {
+    	userRepository.delete(usuario);
+    }
+    
+    public boolean deleteUsuario(long id) {
+    	try {
+            userRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            
+           return false;
+        }
+    }
+    
+    public List<Usuario> pesquisaUsuario(String searchText, boolean searchMode){
+    	System.out.println("Procurando usuario Sevice");
+    	return userRepository.findByNameContainingOrEmailContaining(searchText,searchMode);
+    }
+    
+    public Usuario atualizarUsuario(Usuario usuarioAtualizado) {
+        // Verifique se o usuário existe antes de tentar atualizar
+        if (userRepository.existsById(usuarioAtualizado.getId())) {
+            return userRepository.save(usuarioAtualizado);
+        } else {
+            // Lógica de tratamento se o usuário não existir
+            return null;
+        }
+    }
+    
+}

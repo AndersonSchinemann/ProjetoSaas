@@ -1,0 +1,54 @@
+/**
+ * 
+ */// Teste do serviço usuarioService
+describe('usuarioService', function() {
+    beforeEach(module('ListarApp'));
+
+    it('should be able to get all users', inject(function(usuarioService, $httpBackend) {
+        $httpBackend.expectGET('/api/usuarios').respond(200, [
+            { id: 1, nome: 'João', email: 'joao@email.com' },
+            { id: 2, nome: 'Maria', email: 'maria@email.com' }
+        ]);
+
+        usuarioService.getAllUsuarios().then(function(usuarios) {
+            expect(usuarios.length).toBe(2);
+            expect(usuarios[0].nome).toBe('João');
+            expect(usuarios[1].nome).toBe('Maria');
+        });
+
+        $httpBackend.flush();
+    }));
+
+    it('should be able to delete a user', inject(function(usuarioService, $httpBackend) {
+        $httpBackend.expectDELETE('/api/usuarios/1').respond(200);
+
+        usuarioService.deleteUsuario({ id: 1 }).then(function() {
+            expect(true).toBe(true); // Sucesso na exclusão
+        });
+
+        $httpBackend.flush();
+    }));
+
+    it('should be able to update a user', inject(function(usuarioService, $httpBackend) {
+        $httpBackend.expectPUT('/api/usuarios/1', { id: 1, nome: 'João Silva', email: 'joaosilva@email.com' }).respond(200);
+
+        usuarioService.atualizarUsuario({ id: 1, nome: 'João Silva', email: 'joaosilva@email.com' }).then(function() {
+            expect(true).toBe(true); // Sucesso na atualização
+        });
+
+        $httpBackend.flush();
+    }));
+
+    it('should be able to search users', inject(function(usuarioService, $httpBackend) {
+        $httpBackend.expectGET('/api/usuarios/pesquisa', { params: { searchText: 'joao' } }).respond(200, [
+            { id: 1, nome: 'João', email: 'joao@email.com' }
+        ]);
+
+        usuarioService.pesquisaUsuarios('joao').then(function(usuarios) {
+            expect(usuarios.length).toBe(1);
+            expect(usuarios[0].nome).toBe('João');
+        });
+
+        $httpBackend.flush();
+    }));
+});
